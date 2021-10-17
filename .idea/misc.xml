@@ -3,13 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/font/pacifico_font.xml" value="0.25462962962962965" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/banner_layout_rv.xml" value="0.20153985507246377" />
-        <entry key="app/src/main/res/layout/fragment_main.xml" value="0.19791666666666666" />
-        <entry key="app/src/main/res/layout/nav_view_header.xml" value="0.24230072463768115" />
-        <entry key="app/src/main/res/layout/second_fragment.xml" value="0.35572916666666665" />
-        <entry key="app/src/main/res/menu/navview_menu.xml" value="0.19791666666666666" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/banner_layout_rv.xml" value="0.20052083333333334" />
+        <entry key="app/src/main/res/layout/categories_layout_rv.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_main.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/maisvendidos_layout_rv.xml" value="0.25" />
       </map>
     </option>
   </component>

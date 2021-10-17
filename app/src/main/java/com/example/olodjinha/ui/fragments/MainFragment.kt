@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.example.olodjinha.api.RetrofitInstance
 import com.example.olodjinha.databinding.FragmentMainBinding
 import com.example.olodjinha.repositories.MainRepository
-import com.example.olodjinha.ui.BannerAdapter
+import com.example.olodjinha.ui.adapters.BannerAdapter
+import com.example.olodjinha.ui.adapters.CategoriesAdapter
+import com.example.olodjinha.ui.adapters.MaisVendidosAdapter
 
 class MainFragment : Fragment() {
 
@@ -20,6 +20,8 @@ class MainFragment : Fragment() {
     private val binding: FragmentMainBinding get() = _binding!!
 
     lateinit var bannerAdapter: BannerAdapter
+    lateinit var categoriesAdapter: CategoriesAdapter
+    lateinit var maisVendidosAdapter: MaisVendidosAdapter
 
     private val viewModel: MainViewModel by lazy {
         val repository = MainRepository(RetrofitInstance.apiService)
@@ -41,18 +43,45 @@ class MainFragment : Fragment() {
 
         setupBannerRecyclerView()
 
+        setupCategoriesRv()
+
+        setupMaisVendidosRv()
+
         setupObserver()
+
 
         viewModel.getBanners()
 
-//        binding.tv.setOnClickListener {
-//            findNavController().navigate(MainFragmentDirections.actionMainFragmentToSecondFragment())
-//        }
+        viewModel.getCategories()
+
+        viewModel.getMaisVendidos()
+
+    }
+
+    private fun setupMaisVendidosRv() {
+        maisVendidosAdapter = MaisVendidosAdapter()
+        binding.maisVendidosRv.adapter = maisVendidosAdapter
+    }
+
+    private fun setupCategoriesRv() {
+        categoriesAdapter = CategoriesAdapter()
+        binding.rvCategories.apply {
+            adapter = categoriesAdapter
+        }
+
     }
 
     private fun setupObserver() {
         viewModel.bannerLiveData.observe(viewLifecycleOwner) {
             bannerAdapter.differ.submitList(it)
+        }
+
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner) {
+            categoriesAdapter.differ.submitList(it)
+        }
+
+        viewModel.maisVendidosLiveData.observe(viewLifecycleOwner) {
+            maisVendidosAdapter.differ.submitList(it)
         }
     }
 

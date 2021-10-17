@@ -8,8 +8,31 @@
     tools:context=".ui.fragments.MainFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:nestedScrollingEnabled="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:elevation="0dp"
+            >
+
+            <!-- Header -->
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/coordinator_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll"
+                >
+
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -19,7 +42,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_banner"
                 android:layout_width="0dp"
-                android:minHeight="100dp"
+                android:minHeight="130dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,23 +63,66 @@
                 app:spi_dotSelectedColor="@color/white"
                 android:layout_marginBottom="10dp"/>
 
+            <TextView
+                android:id="@+id/categories_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Categorias"
+                android:textSize="@dimen/textsize_large"
+                app:layout_constraintTop_toBottomOf="@id/rv_banner"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginHorizontal="10dp"/>
+
+            <View
+                android:id="@+id/divider_categories"
+                style="@style/Divider"
+                app:layout_constraintTop_toBottomOf="@id/categories_tv"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="15dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/categories_layout_rv"
+                app:layout_constraintTop_toBottomOf="@id/divider_categories"/>
+
+            <View
+                android:id="@+id/divider_top_maisvendidos"
+                style="@style/Divider"
+                app:layout_constraintTop_toBottomOf="@id/rv_categories"/>
+
+            <TextView
+                android:id="@+id/mais_vendidos_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mais vendidos"
+                android:textSize="@dimen/textsize_large"
+                app:layout_constraintTop_toBottomOf="@id/divider_top_maisvendidos"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginHorizontal="10dp"/>
+
+            <View
+                android:id="@+id/divider_bottom_maisvendidos"
+                style="@style/Divider"
+                app:layout_constraintTop_toBottomOf="@id/mais_vendidos_tv"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mais_vendidos_rv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:nestedScrollingEnabled="true"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/divider_bottom_maisvendidos"
+                tools:listitem="@layout/maisvendidos_layout_rv" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-<!--        &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/tv"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:text="@string/hello_blank_fragment" />-->
-
-
-
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>
