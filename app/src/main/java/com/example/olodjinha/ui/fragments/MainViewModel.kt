@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.olodjinha.models.GetBannerResponse
 import com.example.olodjinha.models.GetCategoriaResponse
-import com.example.olodjinha.models.GetMaisVendidosResponse
+import com.example.olodjinha.models.ProdutoResponse
 import com.example.olodjinha.repositories.MainRepository
 import kotlinx.coroutines.launch
 
@@ -42,8 +42,8 @@ class MainViewModel(
         }
     }
 
-    private val _maisVendidosLiveData = MutableLiveData<List<GetMaisVendidosResponse.MaisVendidos>>()
-    val maisVendidosLiveData: LiveData<List<GetMaisVendidosResponse.MaisVendidos>>
+    private val _maisVendidosLiveData = MutableLiveData<List<ProdutoResponse.Produto>>()
+    val maisVendidosLiveData: LiveData<List<ProdutoResponse.Produto>>
         get() = _maisVendidosLiveData
 
     fun getMaisVendidos() = viewModelScope.launch {
@@ -55,5 +55,21 @@ class MainViewModel(
             }
         }
 
+    }
+
+    private val _productsLiveData = MutableLiveData<List<ProdutoResponse.Produto>>()
+    val productsLiveData: LiveData<List<ProdutoResponse.Produto>>
+        get() = _productsLiveData
+
+    fun getProdutos(categoriaId: Int, limit: Int?, offset: Int?) = viewModelScope.launch {
+        val productsResponse = repository.getProdutos(
+            limit, offset, categoriaId
+        )
+
+        if (productsResponse.isSuccessful) {
+            productsResponse.body()?.let {
+                _productsLiveData.postValue(it.data)
+            }
+        }
     }
 }

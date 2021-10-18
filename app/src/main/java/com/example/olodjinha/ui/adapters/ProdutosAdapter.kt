@@ -8,19 +8,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
 import com.example.olodjinha.R
 import com.example.olodjinha.databinding.MaisvendidosLayoutRvBinding
-import com.example.olodjinha.models.GetMaisVendidosResponse
+import com.example.olodjinha.models.ProdutoResponse
 
-class MaisVendidosAdapter :
-    ListAdapter<GetMaisVendidosResponse.MaisVendidos, MaisVendidosAdapter.MaisVendidosViewHolder>(differCallback) {
+class ProdutosAdapter :
+    ListAdapter<ProdutoResponse.Produto, ProdutosAdapter.MaisVendidosViewHolder>(DIFFER_CALLBACK) {
 
     inner class MaisVendidosViewHolder(
         private val binding: MaisvendidosLayoutRvBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(model: GetMaisVendidosResponse.MaisVendidos) {
+        fun bind(model: ProdutoResponse.Produto) {
             binding.apply {
                 productIv.load(model.urlImagem) {
                     crossfade(true)
@@ -49,25 +48,25 @@ class MaisVendidosAdapter :
 
     companion object {
 
-        private val differCallback: DiffUtil.ItemCallback<GetMaisVendidosResponse.MaisVendidos> =
-            object : DiffUtil.ItemCallback<GetMaisVendidosResponse.MaisVendidos>() {
+        private val DIFFER_CALLBACK: DiffUtil.ItemCallback<ProdutoResponse.Produto> =
+            object : DiffUtil.ItemCallback<ProdutoResponse.Produto>() {
                 override fun areItemsTheSame(
-                    oldItem: GetMaisVendidosResponse.MaisVendidos,
-                    newItem: GetMaisVendidosResponse.MaisVendidos
+                    oldItem: ProdutoResponse.Produto,
+                    newItem: ProdutoResponse.Produto
                 ): Boolean {
                     return oldItem == newItem
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: GetMaisVendidosResponse.MaisVendidos,
-                    newItem: GetMaisVendidosResponse.MaisVendidos
+                    oldItem: ProdutoResponse.Produto,
+                    newItem: ProdutoResponse.Produto
                 ): Boolean {
                     return oldItem.id == newItem.id
                 }
             }
     }
 
-    val differ = AsyncListDiffer(this, differCallback)
+    val differ = AsyncListDiffer(this, DIFFER_CALLBACK)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaisVendidosViewHolder {
         val binding = MaisvendidosLayoutRvBinding.inflate(
@@ -84,9 +83,9 @@ class MaisVendidosAdapter :
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((GetMaisVendidosResponse.MaisVendidos) -> Unit)? = null
+    private var onItemClickListener: ((ProdutoResponse.Produto) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (GetMaisVendidosResponse.MaisVendidos) -> Unit) {
+    fun setOnItemClickListener(listener: (ProdutoResponse.Produto) -> Unit) {
         onItemClickListener = listener
     }
 }

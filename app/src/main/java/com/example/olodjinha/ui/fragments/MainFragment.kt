@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.example.olodjinha.api.RetrofitInstance
 import com.example.olodjinha.databinding.FragmentMainBinding
 import com.example.olodjinha.repositories.MainRepository
 import com.example.olodjinha.ui.adapters.BannerAdapter
 import com.example.olodjinha.ui.adapters.CategoriesAdapter
-import com.example.olodjinha.ui.adapters.MaisVendidosAdapter
+import com.example.olodjinha.ui.adapters.ProdutosAdapter
 
 class MainFragment : Fragment() {
 
@@ -21,7 +22,7 @@ class MainFragment : Fragment() {
 
     lateinit var bannerAdapter: BannerAdapter
     lateinit var categoriesAdapter: CategoriesAdapter
-    lateinit var maisVendidosAdapter: MaisVendidosAdapter
+    lateinit var produtosAdapter: ProdutosAdapter
 
     private val viewModel: MainViewModel by lazy {
         val repository = MainRepository(RetrofitInstance.apiService)
@@ -59,12 +60,22 @@ class MainFragment : Fragment() {
     }
 
     private fun setupMaisVendidosRv() {
-        maisVendidosAdapter = MaisVendidosAdapter()
-        binding.maisVendidosRv.adapter = maisVendidosAdapter
+        produtosAdapter = ProdutosAdapter()
+        binding.maisVendidosRv.adapter = produtosAdapter
     }
 
     private fun setupCategoriesRv() {
-        categoriesAdapter = CategoriesAdapter()
+        categoriesAdapter = CategoriesAdapter().apply {
+            setOnItemClickListener {
+                findNavController().navigate(
+                    MainFragmentDirections.actionMainFragmentToProdutosListFragment(
+                        categoriaId = it.id,
+                        0,
+                        0
+                    )
+                )
+            }
+        }
         binding.rvCategories.apply {
             adapter = categoriesAdapter
         }
@@ -81,7 +92,7 @@ class MainFragment : Fragment() {
         }
 
         viewModel.maisVendidosLiveData.observe(viewLifecycleOwner) {
-            maisVendidosAdapter.differ.submitList(it)
+            produtosAdapter.differ.submitList(it)
         }
     }
 

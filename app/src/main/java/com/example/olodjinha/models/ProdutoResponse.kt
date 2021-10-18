@@ -1,10 +1,10 @@
 package com.example.olodjinha.models
 
-data class GetMaisVendidosResponse(
-    val data: List<MaisVendidos>
+data class ProdutoResponse(
+    val data: List<Produto>
 ) {
 
-    data class MaisVendidos(
+    data class Produto(
         val categoria: GetCategoriaResponse.Categoria,
         val descricao: String = "",
         val id: Int,
