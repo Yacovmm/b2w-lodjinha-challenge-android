@@ -18,14 +18,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/topAppBar"
-                    android:layout_width="match_parent"
-                    android:minHeight="?attr/actionBarSize"
-                    android:layout_height="wrap_content"
-                    app:title="@string/app_name"
-                    style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
-                    android:elevation="0dp" />
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:minHeight="?attr/actionBarSize"
+                android:layout_height="wrap_content"
+                app:title="@string/app_name"
+                style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+                android:elevation="0dp" />
+
 
             <fragment
                 android:name="androidx.navigation.fragment.NavHostFragment"

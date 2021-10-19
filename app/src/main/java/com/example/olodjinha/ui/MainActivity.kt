@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity(), NavigationDelegate {
                     }
                 }
                 R.id.productDetailFragment -> {
-//                    binding.appbar.visibility = View.GONE
                     binding.topAppBar.visibility = View.GONE
                 }
                 else -> {

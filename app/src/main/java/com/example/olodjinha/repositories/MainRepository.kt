@@ -12,13 +12,13 @@ class MainRepository(private val service: LodjinhaService) {
     suspend fun getBanner(): Response<GetBannerResponse> {
         return SafeApiCall.safeNetworkRequest {
             service.getBanner()
-        } ?: Response.success(GetBannerResponse(emptyList()))
+        } ?: Response.success(null)
     }
 
     suspend fun getCategories(): Response<GetCategoriaResponse> {
         return SafeApiCall.safeNetworkRequest {
             service.getCategoria()
-        } ?: Response.success(GetCategoriaResponse(emptyList()))
+        } ?: Response.success(null)
     }
 
     suspend fun getMaisVendidos(): Response<ProdutoResponse> {
