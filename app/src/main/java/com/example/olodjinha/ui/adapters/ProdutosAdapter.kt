@@ -1,6 +1,7 @@
 package com.example.olodjinha.ui.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -40,7 +41,7 @@ class ProdutosAdapter :
                 porPriceProduct.text = "${model.precoPor}"
 
                 root.setOnClickListener {
-                    onItemClickListener?.invoke(model)
+                    onItemClickListener?.invoke(binding.productIv, model)
                 }
             }
         }
@@ -83,9 +84,9 @@ class ProdutosAdapter :
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((ProdutoResponse.Produto) -> Unit)? = null
+    private var onItemClickListener: ((view: View, ProdutoResponse.Produto) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (ProdutoResponse.Produto) -> Unit) {
+    fun setOnItemClickListener(listener: (view: View, ProdutoResponse.Produto) -> Unit) {
         onItemClickListener = listener
     }
 }

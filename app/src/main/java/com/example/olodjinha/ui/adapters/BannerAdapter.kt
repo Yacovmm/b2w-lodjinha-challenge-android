@@ -27,14 +27,11 @@ class BannerAdapter :
                 load(banner.urlImagem)
                 setOnClickListener {
                     onItemClickListener?.invoke(banner)
-                    val extras = FragmentNavigatorExtras(
-                        this to "imagem_teste"
-                    )
+
                     findNavController().navigate(
                         MainFragmentDirections.actionMainFragmentToSecondFragment(
                             banner.urlImagem
-                        ),
-                        extras
+                        )
                     )
                 }
             }

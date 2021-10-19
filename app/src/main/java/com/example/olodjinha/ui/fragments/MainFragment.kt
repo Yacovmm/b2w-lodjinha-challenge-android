@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.example.olodjinha.api.RetrofitInstance
@@ -62,7 +63,19 @@ class MainFragment : Fragment() {
     }
 
     private fun setupMaisVendidosRv() {
-        produtosAdapter = ProdutosAdapter()
+        produtosAdapter = ProdutosAdapter().apply {
+            setOnItemClickListener { view, model ->
+                val extras = FragmentNavigatorExtras(
+                    view to "product_iv"
+                )
+                findNavController().navigate(
+                    MainFragmentDirections.actionMainFragmentToProductDetailFragment(
+                        model.urlImagem
+                    ),
+                    extras
+                )
+            }
+        }
         binding.maisVendidosRv.adapter = produtosAdapter
     }
 

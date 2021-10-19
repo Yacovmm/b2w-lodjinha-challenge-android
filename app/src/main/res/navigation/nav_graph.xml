@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainFragment_to_produtosListFragment"
             app:destination="@id/produtosListFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/secondFragment"
@@ -34,6 +37,17 @@
             app:argType="integer"/>
         <argument
             android:name="title"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_produtosListFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.example.olodjinha.ui.fragments.ProductDetailFragment"
+        android:label="" >
+        <argument
+            android:name="imageUrl"
             app:argType="string" />
     </fragment>
 </navigation>

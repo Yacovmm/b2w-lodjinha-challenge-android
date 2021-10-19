@@ -8,6 +8,7 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/product_iv"
+        android:transitionName="product_iv"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
