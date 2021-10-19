@@ -1,4 +1,4 @@
-package com.example.olodjinha
+package com.example.olodjinha.ui
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -8,9 +8,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.olodjinha.R
 import com.example.olodjinha.databinding.ActivityMainBinding
+import com.example.olodjinha.ui.helpers.NavigationDelegate
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), NavigationDelegate {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -59,5 +62,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavView() {
         binding.topAppBar.setupWithNavController(navigator, binding.drawerLayout)
         binding.navigationView.setupWithNavController(navigator)
+    }
+
+    override fun setToolBarTitle(title: String) {
+        binding.topAppBar.title = title
     }
 }

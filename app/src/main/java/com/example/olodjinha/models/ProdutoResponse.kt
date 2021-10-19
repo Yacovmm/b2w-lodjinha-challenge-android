@@ -1,7 +1,9 @@
 package com.example.olodjinha.models
 
 data class ProdutoResponse(
-    val data: List<Produto>
+    val data: List<Produto>,
+    val offset: Int = 0,
+    val total: Int = 0
 ) {
 
     data class Produto(

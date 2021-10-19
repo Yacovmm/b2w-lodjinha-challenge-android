@@ -1,4 +1,4 @@
-package com.example.olodjinha.ui.fragments
+package com.example.olodjinha.ui.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -61,14 +61,41 @@ class MainViewModel(
     val productsLiveData: LiveData<List<ProdutoResponse.Produto>>
         get() = _productsLiveData
 
-    fun getProdutos(categoriaId: Int, limit: Int?, offset: Int?) = viewModelScope.launch {
+
+    var pageOffset = 0
+    var pageLimit = 20
+
+    var totaItemsFromApi = 0
+
+    private val productsList = mutableListOf<ProdutoResponse.Produto>()
+    var isPaginating = true
+
+
+    fun getProdutos(
+        categoriaId: Int,
+    ) = viewModelScope.launch {
+        isPaginating = true
         val productsResponse = repository.getProdutos(
-            limit, offset, categoriaId
+            categoriaId = null,
+            offset = pageOffset,
+            limit = pageLimit
         )
 
         if (productsResponse.isSuccessful) {
             productsResponse.body()?.let {
-                _productsLiveData.postValue(it.data)
+                println("PASSANDO")
+                productsList.addAll(it.data)
+                println(productsList.size)
+
+                totaItemsFromApi = it.total
+
+                pageOffset = pageLimit
+                pageLimit += 20
+
+                if (pageLimit > totaItemsFromApi)
+                    pageLimit = totaItemsFromApi
+
+                _productsLiveData.postValue(productsList)
             }
         }
     }

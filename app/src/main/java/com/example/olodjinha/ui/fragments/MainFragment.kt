@@ -14,6 +14,8 @@ import com.example.olodjinha.repositories.MainRepository
 import com.example.olodjinha.ui.adapters.BannerAdapter
 import com.example.olodjinha.ui.adapters.CategoriesAdapter
 import com.example.olodjinha.ui.adapters.ProdutosAdapter
+import com.example.olodjinha.ui.viewmodels.MainViewModel
+import com.example.olodjinha.ui.viewmodels.MainViewModelProviderFactory
 
 class MainFragment : Fragment() {
 
@@ -70,8 +72,7 @@ class MainFragment : Fragment() {
                 findNavController().navigate(
                     MainFragmentDirections.actionMainFragmentToProdutosListFragment(
                         categoriaId = it.id,
-                        0,
-                        0
+                        title = it.descricao
                     )
                 )
             }
@@ -103,5 +104,10 @@ class MainFragment : Fragment() {
         PagerSnapHelper().attachToRecyclerView(binding.rvBanner)
         bannerAdapter.setOnItemClickListener {
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

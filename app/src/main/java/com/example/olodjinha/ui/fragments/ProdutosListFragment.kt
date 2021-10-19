@@ -1,18 +1,21 @@
 package com.example.olodjinha.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
-import android.transition.ChangeBounds
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import coil.load
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.olodjinha.api.RetrofitInstance
 import com.example.olodjinha.databinding.ProdutosListFragmentBinding
-import com.example.olodjinha.databinding.SecondFragmentBinding
 import com.example.olodjinha.repositories.MainRepository
 import com.example.olodjinha.ui.adapters.ProdutosAdapter
+import com.example.olodjinha.ui.helpers.NavigationDelegate
+import com.example.olodjinha.ui.viewmodels.MainViewModel
+import com.example.olodjinha.ui.viewmodels.MainViewModelProviderFactory
 
 class ProdutosListFragment : Fragment() {
 
@@ -30,6 +33,15 @@ class ProdutosListFragment : Fragment() {
 
     lateinit var produtosAdapter: ProdutosAdapter
 
+    var listener: NavigationDelegate? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is NavigationDelegate) {
+            listener = context
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,10 +55,10 @@ class ProdutosListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        listener?.setToolBarTitle(args.title)
+
         viewModel.getProdutos(
-            args.categoriaId,
-            null,
-            null
+            args.categoriaId
         )
 
         setupRv()
@@ -56,12 +68,39 @@ class ProdutosListFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.productsLiveData.observe(viewLifecycleOwner) {
-            produtosAdapter.differ.submitList(it)
+            produtosAdapter.differ.submitList(it.toList())
+            viewModel.isPaginating = false
         }
     }
 
     private fun setupRv() {
         produtosAdapter = ProdutosAdapter()
-        binding.produtosRv.adapter = produtosAdapter
+        binding.produtosRv.apply {
+            adapter = produtosAdapter
+            addOnScrollListener(scrollLister)
+        }
     }
+
+    private val scrollLister = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            (recyclerView.layoutManager as? LinearLayoutManager)?.let { linearLayout ->
+                if (dy > 0 && viewModel.isPaginating.not()) { // Check to scrool down
+                    val visibleItemCount = linearLayout.childCount // Items visible in the recycler
+                    val firstVisibleItem = linearLayout.findFirstCompletelyVisibleItemPosition() // Position of the first visible Item
+                    val totalItemCount = produtosAdapter.itemCount // Items total of the adapter
+
+                    if ((visibleItemCount + firstVisibleItem) >= totalItemCount) {
+                        viewModel.getProdutos(args.categoriaId)
+//                        viewModel.items.add(null)
+//                        viewModel.adapter.notifyDataSetChanged()
+//                        // viewModel.adapter.notifyItemInserted(viewModel.items.size)
+//                        viewModel.getNotificationsPage(viewModel.page++)
+                    }
+                }
+            }
+        }
+    }
+
 }

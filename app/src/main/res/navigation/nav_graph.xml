@@ -28,16 +28,12 @@
     <fragment
         android:id="@+id/produtosListFragment"
         android:name="com.example.olodjinha.ui.fragments.ProdutosListFragment"
-        android:label="ProdutosListFragment"
         tools:layout="@layout/produtos_list_fragment">
         <argument
             android:name="categoriaId"
             app:argType="integer"/>
         <argument
-            android:name="offset"
-            app:argType="integer" />
-        <argument
-            android:name="limit"
-            app:argType="integer" />
+            android:name="title"
+            app:argType="string" />
     </fragment>
 </navigation>
