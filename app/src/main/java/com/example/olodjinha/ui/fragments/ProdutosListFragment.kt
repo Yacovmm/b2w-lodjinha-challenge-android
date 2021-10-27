@@ -2,13 +2,12 @@ package com.example.olodjinha.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.olodjinha.R
 import com.example.olodjinha.api.RetrofitInstance
 import com.example.olodjinha.databinding.ProdutosListFragmentBinding
 import com.example.olodjinha.repositories.MainRepository
@@ -42,6 +41,25 @@ class ProdutosListFragment : Fragment() {
         }
     }
 
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setHasOptionsMenu(true)
+//    }
+//
+//    override fun onPrepareOptionsMenu(menu: Menu) {
+//        println("menu yacov")
+//        menu.findItem(R.id.filter).apply {
+//            isVisible = true
+//            setOnMenuItemClickListener {
+//                println("Yacov")
+//                true
+//            }
+//        }
+//        super.onPrepareOptionsMenu(menu)
+//    }
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,6 +72,7 @@ class ProdutosListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         listener?.setToolBarTitle(args.title)
 

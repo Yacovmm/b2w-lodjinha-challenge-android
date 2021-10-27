@@ -14,15 +14,26 @@ class MainViewModel(
     private val repository: MainRepository
 ) : ViewModel() {
 
-    private val _bannerLiveData = MutableLiveData<List<GetBannerResponse.Banner>>()
-    val bannerLiveData: LiveData<List<GetBannerResponse.Banner>> get() = _bannerLiveData
+    private val _bannerLiveData = MutableLiveData<ViewState>()
+    val bannerLiveData: LiveData<ViewState> get() = _bannerLiveData
 
     fun getBanners() = viewModelScope.launch {
+        _bannerLiveData.postValue(
+            ViewState(
+                loading = true
+            )
+        )
         val response = repository.getBanner()
 
         if (response.isSuccessful) {
             response.body()?.let {
-                _bannerLiveData.postValue(it.data)
+
+                _bannerLiveData.postValue(
+                    ViewState(
+                        loading = false,
+                        data = it.data
+                    )
+                )
             }
         }
     }
@@ -100,3 +111,8 @@ class MainViewModel(
         }
     }
 }
+
+data class ViewState(
+    var loading: Boolean = false,
+    val data: List<GetBannerResponse.Banner>? = null
+)

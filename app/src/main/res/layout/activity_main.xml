@@ -24,7 +24,8 @@
                 android:minHeight="?attr/actionBarSize"
                 android:layout_height="wrap_content"
                 app:title="@string/app_name"
-                style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+                app:menu="@menu/menu_toolbar"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 android:elevation="0dp" />
 
 

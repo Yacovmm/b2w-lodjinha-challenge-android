@@ -98,7 +98,14 @@ class MainFragment : Fragment() {
 
     private fun setupObserver() {
         viewModel.bannerLiveData.observe(viewLifecycleOwner) {
-            bannerAdapter.differ.submitList(it)
+            when {
+                it.loading -> {
+                    // TODO SET LOADING
+                }
+                it.data.isNullOrEmpty().not() -> {
+                    bannerAdapter.differ.submitList(it.data)
+                }
+            }
         }
 
         viewModel.categoriesLiveData.observe(viewLifecycleOwner) {
