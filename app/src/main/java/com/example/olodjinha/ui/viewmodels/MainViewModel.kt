@@ -94,9 +94,11 @@ class MainViewModel(
 
         if (productsResponse.isSuccessful) {
             productsResponse.body()?.let {
-                println("PASSANDO")
+                if (it.data.isEmpty()) {
+                    hasMoreItems = false
+                }
+
                 productsList.addAll(it.data)
-                println(productsList.size)
 
                 totaItemsFromApi = it.total
 
@@ -110,6 +112,8 @@ class MainViewModel(
             }
         }
     }
+
+    var hasMoreItems = true
 }
 
 data class ViewState(

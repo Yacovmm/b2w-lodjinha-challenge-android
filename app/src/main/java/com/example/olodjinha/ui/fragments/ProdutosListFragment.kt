@@ -41,25 +41,6 @@ class ProdutosListFragment : Fragment() {
         }
     }
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setHasOptionsMenu(true)
-//    }
-//
-//    override fun onPrepareOptionsMenu(menu: Menu) {
-//        println("menu yacov")
-//        menu.findItem(R.id.filter).apply {
-//            isVisible = true
-//            setOnMenuItemClickListener {
-//                println("Yacov")
-//                true
-//            }
-//        }
-//        super.onPrepareOptionsMenu(menu)
-//    }
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -89,6 +70,7 @@ class ProdutosListFragment : Fragment() {
         viewModel.productsLiveData.observe(viewLifecycleOwner) {
             produtosAdapter.differ.submitList(it.toList())
             viewModel.isPaginating = false
+            binding.progress.visibility = View.GONE
         }
     }
 
@@ -105,17 +87,14 @@ class ProdutosListFragment : Fragment() {
             super.onScrolled(recyclerView, dx, dy)
 
             (recyclerView.layoutManager as? LinearLayoutManager)?.let { linearLayout ->
-                if (dy > 0 && viewModel.isPaginating.not()) { // Check to scrool down
+                if (dy > 0 && viewModel.isPaginating.not() && viewModel.hasMoreItems) { // Check to scrool down
                     val visibleItemCount = linearLayout.childCount // Items visible in the recycler
                     val firstVisibleItem = linearLayout.findFirstCompletelyVisibleItemPosition() // Position of the first visible Item
                     val totalItemCount = produtosAdapter.itemCount // Items total of the adapter
 
                     if ((visibleItemCount + firstVisibleItem) >= totalItemCount) {
                         viewModel.getProdutos(args.categoriaId)
-//                        viewModel.items.add(null)
-//                        viewModel.adapter.notifyDataSetChanged()
-//                        // viewModel.adapter.notifyItemInserted(viewModel.items.size)
-//                        viewModel.getNotificationsPage(viewModel.page++)
+                        binding.progress.visibility = View.VISIBLE
                     }
                 }
             }
