@@ -75,12 +75,9 @@ class MainViewModel(
 
     var pageOffset = 0
     var pageLimit = 20
-
     var totaItemsFromApi = 0
-
     private val productsList = mutableListOf<ProdutoResponse.Produto>()
     var isPaginating = true
-
 
     fun getProdutos(
         categoriaId: Int,
