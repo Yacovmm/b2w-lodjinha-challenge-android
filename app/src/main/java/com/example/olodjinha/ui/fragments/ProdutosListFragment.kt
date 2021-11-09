@@ -2,16 +2,17 @@ package com.example.olodjinha.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.olodjinha.R
 import com.example.olodjinha.api.RetrofitInstance
 import com.example.olodjinha.databinding.ProdutosListFragmentBinding
 import com.example.olodjinha.repositories.MainRepository
+import com.example.olodjinha.ui.FilterBottomSheetDialog
+import com.example.olodjinha.ui.FilterBottomSheetDialog.Companion.openBottomSheetDialog
 import com.example.olodjinha.ui.adapters.ProdutosAdapter
 import com.example.olodjinha.ui.helpers.NavigationDelegate
 import com.example.olodjinha.ui.viewmodels.MainViewModel
@@ -55,6 +56,7 @@ class ProdutosListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         listener?.setToolBarTitle(args.title)
 
         viewModel.getProdutos(
@@ -64,12 +66,21 @@ class ProdutosListFragment : Fragment() {
         setupRv()
 
         setupObservers()
+
+        listener?.setToolbarFilterClick {
+            openBottomSheetDialog(
+                items = arrayListOf("A-Z", "Z-A", "Original")
+            ) { option, position ->
+                println("option $option posicao: $position")
+            }
+        }
     }
 
     private fun setupObservers() {
         viewModel.productsLiveData.observe(viewLifecycleOwner) {
             produtosAdapter.differ.submitList(it.toList())
             viewModel.isPaginating = false
+            binding.progress.visibility = View.GONE
         }
     }
 
@@ -79,6 +90,9 @@ class ProdutosListFragment : Fragment() {
             adapter = produtosAdapter
             addOnScrollListener(scrollLister)
         }
+        produtosAdapter.setOnItemClickListener { view, produto ->
+
+        }
     }
 
     private val scrollLister = object : RecyclerView.OnScrollListener() {
@@ -86,17 +100,14 @@ class ProdutosListFragment : Fragment() {
             super.onScrolled(recyclerView, dx, dy)
 
             (recyclerView.layoutManager as? LinearLayoutManager)?.let { linearLayout ->
-                if (dy > 0 && viewModel.isPaginating.not()) { // Check to scrool down
+                if (dy > 0 && viewModel.isPaginating.not() && viewModel.hasMoreItems) { // Check to scrool down
                     val visibleItemCount = linearLayout.childCount // Items visible in the recycler
                     val firstVisibleItem = linearLayout.findFirstCompletelyVisibleItemPosition() // Position of the first visible Item
                     val totalItemCount = produtosAdapter.itemCount // Items total of the adapter
 
                     if ((visibleItemCount + firstVisibleItem) >= totalItemCount) {
                         viewModel.getProdutos(args.categoriaId)
-//                        viewModel.items.add(null)
-//                        viewModel.adapter.notifyDataSetChanged()
-//                        // viewModel.adapter.notifyItemInserted(viewModel.items.size)
-//                        viewModel.getNotificationsPage(viewModel.page++)
+                        binding.progress.visibility = View.VISIBLE
                     }
                 }
             }

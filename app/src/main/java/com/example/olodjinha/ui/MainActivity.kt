@@ -2,6 +2,7 @@ package com.example.olodjinha.ui
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -58,6 +59,11 @@ class MainActivity : AppCompatActivity(), NavigationDelegate {
                 R.id.productDetailFragment -> {
                     binding.topAppBar.visibility = View.GONE
                 }
+                R.id.produtosListFragment -> {
+                    binding.topAppBar.menu.findItem(R.id.filter).apply {
+                        isVisible = true
+                    }
+                }
                 else -> {
                     for (i in 0 until binding.topAppBar.childCount) {
                         val view = binding.topAppBar.getChildAt(i)
@@ -78,5 +84,12 @@ class MainActivity : AppCompatActivity(), NavigationDelegate {
 
     override fun setToolBarTitle(title: String) {
         binding.topAppBar.title = title
+    }
+
+    override fun setToolbarFilterClick(action: () -> Unit) {
+        binding.topAppBar.menu.findItem(R.id.filter).setOnMenuItemClickListener {
+            action.invoke()
+            true
+        }
     }
 }
