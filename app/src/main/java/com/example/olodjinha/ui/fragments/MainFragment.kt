@@ -17,6 +17,9 @@ import com.example.olodjinha.ui.adapters.CategoriesAdapter
 import com.example.olodjinha.ui.adapters.ProdutosAdapter
 import com.example.olodjinha.ui.viewmodels.MainViewModel
 import com.example.olodjinha.ui.viewmodels.MainViewModelProviderFactory
+import com.example.olodjinha.utils.toggleVisibility
+import com.google.android.material.snackbar.Snackbar
+import kotlin.time.ExperimentalTime
 
 class MainFragment : Fragment() {
 
@@ -54,11 +57,11 @@ class MainFragment : Fragment() {
         setupObserver()
 
 
-        viewModel.getBanners()
+        viewModel.getMainHomeData()
 
-        viewModel.getCategories()
-
-        viewModel.getMaisVendidos()
+//        viewModel.getCategories()
+//
+//        viewModel.getMaisVendidos()
 
     }
 
@@ -97,23 +100,37 @@ class MainFragment : Fragment() {
     }
 
     private fun setupObserver() {
-        viewModel.bannerLiveData.observe(viewLifecycleOwner) {
+        viewModel.homeLiveData.observe(viewLifecycleOwner) { viewState ->
             when {
-                it.loading -> {
-                    // TODO SET LOADING
+                viewState.loading -> {
+                    binding.mainLayout.toggleVisibility(false)
+                    binding.progress.toggleVisibility(true)
                 }
-                it.data.isNullOrEmpty().not() -> {
-                    bannerAdapter.differ.submitList(it.data)
+                viewState.error -> {
+                    Snackbar.make(
+                        requireView(),
+                        "Ocorreu um erro",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+                viewState.data != null -> {
+                    binding.progress.visibility = View.GONE
+                    binding.mainLayout.toggleVisibility(true)
+
+
+                    if (viewState.data.bannerData.isNullOrEmpty().not()) {
+                        bannerAdapter.differ.submitList(viewState.data.bannerData)
+                    }
+
+                    if (viewState.data.categoriaData.isNullOrEmpty().not()) {
+                        categoriesAdapter.differ.submitList(viewState.data.categoriaData)
+                    }
+
+                    if (viewState.data.maisVendidosData.isNullOrEmpty().not()) {
+                        produtosAdapter.differ.submitList(viewState.data.maisVendidosData)
+                    }
                 }
             }
-        }
-
-        viewModel.categoriesLiveData.observe(viewLifecycleOwner) {
-            categoriesAdapter.differ.submitList(it)
-        }
-
-        viewModel.maisVendidosLiveData.observe(viewLifecycleOwner) {
-            produtosAdapter.differ.submitList(it)
         }
     }
 

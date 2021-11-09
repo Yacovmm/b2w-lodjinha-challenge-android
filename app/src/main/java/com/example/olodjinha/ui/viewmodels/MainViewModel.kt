@@ -8,34 +8,69 @@ import com.example.olodjinha.models.GetBannerResponse
 import com.example.olodjinha.models.GetCategoriaResponse
 import com.example.olodjinha.models.ProdutoResponse
 import com.example.olodjinha.repositories.MainRepository
+import com.example.olodjinha.ui.ViewStates.HomeData
+import com.example.olodjinha.ui.ViewStates.HomeViewState
+import com.example.olodjinha.utils.ResponseWrapper
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
+import kotlin.time.measureTimedValue
 
 class MainViewModel(
-    private val repository: MainRepository
+    private val repository: MainRepository,
 ) : ViewModel() {
 
-    private val _bannerLiveData = MutableLiveData<ViewState>()
-    val bannerLiveData: LiveData<ViewState> get() = _bannerLiveData
+    private val _homeLiveData = MutableLiveData<HomeViewState>()
+    val homeLiveData: LiveData<HomeViewState> get() = _homeLiveData
 
-    fun getBanners() = viewModelScope.launch {
-        _bannerLiveData.postValue(
-            ViewState(
-                loading = true
+    fun getMainHomeData() = viewModelScope.launch {
+        _homeLiveData.value = HomeViewState(loading = true)
+
+        val time1 = measureTimeMillis {
+            val bannerResponse = async { repository.getBanner() }
+            val categoriaResponse = async { repository.getCategories() }
+            val productsResponse = async { repository.getMaisVendidos() }
+            val data = handleResponses(
+                bannerResponse.await(),
+                categoriaResponse.await(),
+                productsResponse.await()
             )
-        )
-        val response = repository.getBanner()
 
-        if (response.isSuccessful) {
-            response.body()?.let {
-
-                _bannerLiveData.postValue(
-                    ViewState(
-                        loading = false,
-                        data = it.data
-                    )
-                )
-            }
+            _homeLiveData.postValue(data)
+            // 1319 ms
+            // 812 ms
         }
+        println("Tempo é ${time1} ms")
+    }
+
+    private fun handleResponses(
+        bannerResponse: ResponseWrapper<GetBannerResponse?>,
+        categoriaResponse: ResponseWrapper<GetCategoriaResponse?>,
+        productsResponse: ResponseWrapper<ProdutoResponse?>
+    ): HomeViewState {
+        if (bannerResponse is ResponseWrapper.Success
+            && categoriaResponse is ResponseWrapper.Success
+            && productsResponse is ResponseWrapper.Success) {
+            return HomeViewState(
+                loading = false,
+                data = HomeData(
+                    bannerData = bannerResponse.result?.data,
+                    categoriaData = categoriaResponse.result?.data,
+                    maisVendidosData = productsResponse.result?.data
+                )
+            )
+        }
+        return HomeViewState(
+            loading = false,
+            data = null,
+            error = true
+        )
     }
 
     private val _categoriesLiveData = MutableLiveData<List<GetCategoriaResponse.Categoria>>()
@@ -46,8 +81,8 @@ class MainViewModel(
     fun getCategories() = viewModelScope.launch {
         val response = repository.getCategories()
 
-        if (response.isSuccessful) {
-            response.body()?.let {
+        if (response is ResponseWrapper.Success) {
+            response.result?.let {
                 _categoriesLiveData.postValue(it.data)
             }
         }
@@ -60,8 +95,8 @@ class MainViewModel(
     fun getMaisVendidos() = viewModelScope.launch {
         val response = repository.getMaisVendidos()
 
-        if (response.isSuccessful) {
-            response.body()?.let {
+        if (response is ResponseWrapper.Success) {
+            response.result?.let {
                 _maisVendidosLiveData.postValue(it.data)
             }
         }
@@ -72,10 +107,10 @@ class MainViewModel(
     val productsLiveData: LiveData<List<ProdutoResponse.Produto>>
         get() = _productsLiveData
 
-
+    //
     var pageOffset = 0
     var pageLimit = 20
-    var totaItemsFromApi = 0
+    var totalItemsFromApi = 0
     private val productsList = mutableListOf<ProdutoResponse.Produto>()
     var isPaginating = true
 
@@ -95,15 +130,18 @@ class MainViewModel(
                     hasMoreItems = false
                 }
 
+                // Add all the products to already existed list
                 productsList.addAll(it.data)
 
-                totaItemsFromApi = it.total
+                // Set the total items
+                totalItemsFromApi = it.total
+
 
                 pageOffset = pageLimit
                 pageLimit += 20
 
-                if (pageLimit > totaItemsFromApi)
-                    pageLimit = totaItemsFromApi
+                if (pageLimit > totalItemsFromApi)
+                    pageLimit = totalItemsFromApi
 
                 _productsLiveData.postValue(productsList)
             }
@@ -113,7 +151,3 @@ class MainViewModel(
     var hasMoreItems = true
 }
 
-data class ViewState(
-    var loading: Boolean = false,
-    val data: List<GetBannerResponse.Banner>? = null
-)
