@@ -11,6 +11,8 @@ import com.example.olodjinha.R
 import com.example.olodjinha.api.RetrofitInstance
 import com.example.olodjinha.databinding.ProdutosListFragmentBinding
 import com.example.olodjinha.repositories.MainRepository
+import com.example.olodjinha.ui.FilterBottomSheetDialog
+import com.example.olodjinha.ui.FilterBottomSheetDialog.Companion.openBottomSheetDialog
 import com.example.olodjinha.ui.adapters.ProdutosAdapter
 import com.example.olodjinha.ui.helpers.NavigationDelegate
 import com.example.olodjinha.ui.viewmodels.MainViewModel
@@ -64,6 +66,14 @@ class ProdutosListFragment : Fragment() {
         setupRv()
 
         setupObservers()
+
+        listener?.setToolbarFilterClick {
+            openBottomSheetDialog(
+                items = arrayListOf("A-Z", "Z-A", "Original")
+            ) { option, position ->
+                println("option $option posicao: $position")
+            }
+        }
     }
 
     private fun setupObservers() {
@@ -79,6 +89,9 @@ class ProdutosListFragment : Fragment() {
         binding.produtosRv.apply {
             adapter = produtosAdapter
             addOnScrollListener(scrollLister)
+        }
+        produtosAdapter.setOnItemClickListener { view, produto ->
+
         }
     }
 
