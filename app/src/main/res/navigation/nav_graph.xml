@@ -41,7 +41,7 @@
         <action
             android:id="@+id/action_produtosListFragment_to_productDetailFragment"
             app:destination="@id/productDetailFragment" />
-    </fragment>
+           </fragment>
     <fragment
         android:id="@+id/productDetailFragment"
         android:name="com.example.olodjinha.ui.fragments.ProductDetailFragment"
@@ -50,4 +50,18 @@
             android:name="imageUrl"
             app:argType="string" />
     </fragment>
+<!--    <dialog-->
+<!--        android:id="@+id/filterBottomSheetDialog"-->
+<!--        android:name="com.example.olodjinha.ui.FilterBottomSheetDialog"-->
+<!--        android:label="FilterBottomSheetDialog" >-->
+
+<!--        <argument-->
+<!--            android:name="items"-->
+<!--            app:argType="java.util.ArrayList" />-->
+
+<!--        <argument-->
+<!--            android:name="onSelectionFinished"-->
+<!--            app:argType="string" />-->
+
+<!--    </dialog>-->
 </navigation>

@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.example.olodjinha.R
 import com.example.olodjinha.databinding.BottomSheetFilterBinding
-import com.example.olodjinha.databinding.SimpleRecyclerItemBinding
 import com.example.olodjinha.ui.adapters.FilterAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -22,7 +20,6 @@ class FilterBottomSheetDialog : BottomSheetDialogFragment() {
 	private val binding: BottomSheetFilterBinding get() = _binding!!
 
 	private var list: ArrayList<String> = arrayListOf()
-	private var mutableList: ArrayList<String> = arrayListOf()
 	private var onSelectionFinished: ((String, Int) -> Unit)? = null
 
 	private lateinit var adapter: FilterAdapter
@@ -41,7 +38,6 @@ class FilterBottomSheetDialog : BottomSheetDialogFragment() {
 			list = ArrayList(it.getStringArrayList(ITEMS_KEY))
 			onSelectionFinished = it.getSerializable(ON_SELECTION_FINISHED_KEY) as? ((String, Int) -> Unit)?
 		}
-		mutableList = list
 
 		return super.onCreateDialog(savedInstanceState)
 	}
@@ -54,7 +50,7 @@ class FilterBottomSheetDialog : BottomSheetDialogFragment() {
 		dialog.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
 		val behavior = BottomSheetBehavior.from(dialog)
-		behavior.state = BottomSheetBehavior.STATE_DRAGGING
+		behavior.state = BottomSheetBehavior.STATE_SETTLING
 		behavior.isDraggable = true
 
 		adapter = FilterAdapter(
